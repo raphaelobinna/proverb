@@ -1,19 +1,17 @@
-const express = require('express');
-const router = express.Router();
-const { auth, checkUser } = require('../middleware/auth');
+
 const Post = require('../models/Post');
 
 //show add page
 //GET request /posts/add
-router.get('/add', auth, (req,res) => {
+module.exports.add_get = (req,res) => {
     res.render('posts/add')
     
     
-});
+};
 
 //process add form
 //POST request /posts
-router.post('/', auth, checkUser, async (req,res) => {
+module.exports.add_post =  async (req,res) => {
    try {
        req.body.user = res.locals.user._id
        await Post.create(req.body)
@@ -24,11 +22,11 @@ router.post('/', auth, checkUser, async (req,res) => {
    }
     
     
-});
+};
 
 //show all posts
 //GET request /posts
-router.get('/', auth, async (req,res) => {
+module.exports.show_get = async (req,res) => {
    try {
        const posts = await Post.find({ status: 'public' })
                                 .populate('user')
@@ -41,11 +39,11 @@ router.get('/', auth, async (req,res) => {
        console.log(err)
        res.render('errors/500')
    }   
-});
+};
 
 // @desc    Show single post
 // @route   GET /posts/:id
-router.get('/:id', auth, checkUser, async (req, res) => {
+module.exports.single_get = async (req, res) => {
   try {
     let post = await Post.findById(req.params.id).populate('user').lean()
 
@@ -64,11 +62,11 @@ router.get('/:id', auth, checkUser, async (req, res) => {
     console.error(err)
     res.render('errors/404')
   }
-})
+};
 
 //show edit page
 //GET request /posts/edit/:id
-router.get('/edit/:id', auth, checkUser, async (req,res) => {
+module.exports.edit_get = async (req,res) => {
     try {
         const post = await Post.findOne({
           _id: req.params.id,
@@ -92,11 +90,11 @@ router.get('/edit/:id', auth, checkUser, async (req,res) => {
         console.error(err)
         return res.render('errors/500')
       }
-});
+};
 
 // @desc    Update post
 // @route   PUT /posts/:id
-router.put('/:id', auth, checkUser, async (req, res) => {
+module.exports.update_put = async (req, res) => {
     try {
       let post = await Post.findById(req.params.id).lean()
   
@@ -118,11 +116,11 @@ router.put('/:id', auth, checkUser, async (req, res) => {
       console.error(err)
       return res.render('errors/500')
     }
-  })
+};
 
   // @desc    Delete post
 // @route   DELETE /posts/:id
-router.delete('/:id', auth, checkUser, async (req, res) => {
+module.exports.post_delete = async (req, res) => {
 
   try {
     await Post.remove({_id: req.params.id})
@@ -151,11 +149,11 @@ router.delete('/:id', auth, checkUser, async (req, res) => {
   //   console.error(err)
   //   return res.render('errors/500')
   // }
-});
+};
 
 // @desc    User posts
 // @route   GET /posts/user/:userId
-router.get('/user/:userId', auth, async (req, res) => {
+module.exports.userpost_get = async (req, res) => {
   try {
     const posts = await Post.find({
       user: req.params.userId,
@@ -171,7 +169,6 @@ router.get('/user/:userId', auth, async (req, res) => {
     console.error(err)
     res.render('errors/500')
   }
-})
+};
   
 
-module.exports = router

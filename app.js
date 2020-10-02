@@ -6,7 +6,9 @@ const cookieParser = require('cookie-parser');
 const methodOverride = require('method-override')
 const morgan = require('morgan');
 const handlebars = require('express-handlebars');
+const homeRoutes = require('./routes/homeRoutes');
 const authRoutes = require('./routes/authRoutes');
+const postRoutes = require('./routes/postRoutes')
 const { checkUser } = require('./middleware/auth');
 
 //load config
@@ -59,9 +61,9 @@ app.use(function (req, res, next) {
 
 //Routes
 app.get('*', checkUser)
-app.use('/', require('./routes/index'));
-app.use('/posts', require('./routes/posts'));
+app.use(homeRoutes);
 app.use(authRoutes);
+app.use(postRoutes);
 
 
 
