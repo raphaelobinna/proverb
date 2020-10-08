@@ -41,12 +41,12 @@ app.use(
   )
 
 //handlebars helper 
-const { formatDate, stripTags, truncate, editIcon, select } = require('./helpers/hbs');
+const { formatDate, stripTags, truncate, editIcon, select, trans } = require('./helpers/hbs');
 
 //handlebars
 app.set('view engine', 'hbs');
 app.engine('hbs', handlebars({
-    helpers: {formatDate, stripTags, truncate, editIcon, select  },
+    helpers: {formatDate, stripTags, truncate, editIcon, select, trans  },
     layoutsDir: __dirname + '/views/layouts',
     extname: 'hbs', defaultLayout: 'main' }));
 
@@ -60,7 +60,7 @@ app.use(function (req, res, next) {
 });
 
 //Routes
-app.get('*', checkUser)
+app.get('*', checkUser);
 app.use(homeRoutes);
 app.use(authRoutes);
 app.use(postRoutes);

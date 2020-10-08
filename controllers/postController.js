@@ -1,9 +1,11 @@
-
+const puppeteer = require('puppeteer')
 const Post = require('../models/Post');
 
 //show add page
 //GET request /posts/add
 module.exports.add_get = (req,res) => {
+
+
     res.render('posts/add')
     
     
@@ -12,6 +14,8 @@ module.exports.add_get = (req,res) => {
 //process add form
 //POST request /posts
 module.exports.add_post =  async (req,res) => {
+     
+
    try {
        req.body.user = res.locals.user._id
        await Post.create(req.body)
@@ -130,25 +134,7 @@ module.exports.post_delete = async (req, res) => {
     console.error(err)
     res.render('errors/500')
   }
-  // try {
-  //   let post = await Post.findById(req.params.id).lean()
-
-  //   if (!post) {
-  //     return res.render('errors/404')
-  //   }
-
-  //   if (post.user != res.locals.user._id) {
-  //     await Post.remove({ _id: req.params.id })
-  //     res.redirect('/dashboard')
-
-  //   } else {
-      
-  //     res.redirect('/posts')
-  //   }
-  // } catch (err) {
-  //   console.error(err)
-  //   return res.render('errors/500')
-  // }
+ 
 };
 
 // @desc    User posts
@@ -171,4 +157,31 @@ module.exports.userpost_get = async (req, res) => {
   }
 };
   
+//translate textarea
+// method POST /trans
+module.exports.trans_post = async (req, res) => {
+       const data = req.body; 
+        const rec = data.data
+       console.log('data received:' + rec)
+
+
+
+    const url = 'https://translate.google.com/#view=home&op=translate&sl=auto&tl=ig&text=' + rec ;
+    
+
+        let browser = await puppeteer.launch();
+        let page = await browser.newPage();
+
+        await page.goto(url, { waitUntil: 'networkidle2' })
+
+        let datu =await page.evaluate(() => {
+            let trans = document.querySelector('span[class="tlid-translation translation"]').innerText;
+
+            return trans;
+        })
+        console.log('datu is: ' + datu);
+        //return data
+        res.json(datu)
+       // await browser.close();
+}
 

@@ -2,7 +2,7 @@
 
 <h3>Add Proverb</h3>
 <div class="row">
-    <form action="/posts" method="POST" class="col s12">
+    <form action="/posts" method="POST" class="col s12" id="form">
         <div class="row">
             <label for="title">Title</label>
             <div class="input-field">
@@ -25,13 +25,57 @@
         <div class="row">
             <div class="input-field">
                 <h5>Write Us a Proverb:</h5>
-                <textarea id="body" name="body"></textarea>
+                <textarea id="boo" name="boo" ></textarea>
+                <h5>Click Translate To see Igbo Translation</h5>
+                <textarea id="Translate" name="Translate"></textarea>
             </div>
         </div>
 
         <div class="row">
-            <input type="submit" value="Save" class="btn">
+            <input type="submit" value="Save" class="btn" >
             <a href="/dashboard" class="btn orange">Cancel</a>
         </div>
+        
     </form>
+    <button id="translate">Translate</button>
 </div>
+<script>
+    const button = document.querySelector('#translate');
+    const form  = document.querySelector('#form')
+    const transmes = document.querySelector('#Translate');
+
+    button.addEventListener('click', async (e) => {
+
+        transmes.textContent = '';
+        const daz = form.boo.value;
+        console.log(daz);
+
+         try {
+          const res = await fetch('/trans', {
+              method: 'POST',
+              body: JSON.stringify({ data: daz}),
+              headers: {'Content-Type' : 'application/json'}
+          });
+          const data = await res.json();
+          const bull = JSON.stringify(data)
+          console.log('bull is :' + bull)
+
+          if (data) {
+              transmes.textContent = bull;
+          } else {
+              transmes.textContent = 'Failed to get translation, Please try again'
+          }
+
+         }catch(err) {
+             console.log(err)
+         }
+
+    })
+
+
+</script>
+
+  
+
+
+

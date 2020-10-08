@@ -10,10 +10,13 @@ const PostSchema = new Schema({
         trim: true,
        
     },
-    body: {
+    boo: {
         type: String,
         required: true, 
         
+    },
+    Translate: {
+        type: String,
     },
     status: {
         type: String,

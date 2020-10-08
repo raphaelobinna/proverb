@@ -6,3 +6,5 @@ const router = Router();
 
 router.get('/', homeController.home_get);
 router.get('/dashboard', auth, checkUser, homeController.dashboard_get);
+
+module.exports = router;
